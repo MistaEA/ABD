@@ -74,5 +74,109 @@ Select * from Cliente where RFC_Cli = '02QW830118LS1' or Apellidos = 'Martinez L
 resultados de la consulta*/
 Select * from producto order by Nombre_Prod asc;
 Select * from Proveedor order by RFC_prov desc;
-
 Select * from Cliente where RFC_Cli in('02QW830118LS1','OOIH830118LS1');
+
+/*consulta distinct --> nos muestra los valores 
+distintos de un campo */
+
+Select distinct RFC_Cli from producto ORDER BY RFC_Cli asc;
+Select distinct RFC_prov from producto;
+/*es between*/
+Select * from producto where precio between 3000 and 100000; /* cuando el cliente quiera saber que le alcanza con el dinero de su cuenta*/
+Select * from Cliente where Fecha_Cli between '2000-01-12' and '2003-09-12';
+
+/* like --> nos permite buscar patrones cuando el tabulador 
+% se encuentre al final del patron lo busca al inicio hacer dos cunsultas para cada tabla d
+una %patron% y otra %pa %patron% pa%*/
+
+Select * from Cliente where Nombre_Cli like '%ua%' or Apellidos like'%ro';
+
+/* Las funciones SQL MIN() y MAX()
+la función MIN() devuelve el valor más pequeño de lacoluna seleccionada.
+
+La función MAX() devuelve el valor más grande de 
+la columna selccionada.*/
+
+Select min(Precio) as elPrecioMasBajo From producto;
+Select max(Precio) as elPrecioMasAlto From producto;
+Select max(Fecha_Cli) as laFechaMasAlto From Cliente;
+
+/*la funcion count devuelve el número de filas 
+que coinciden una condicion*/
+
+Select count(Nombre_Prod) as totalDeProductos from producto;/*puedo contar cuantas mujeres y cuantos hombres hay de una escuela usando el 'count' y una condicion 'where'*/
+Select count(RFC_prov) as totalProveedores from Proveedor;
+
+Select * from producto;
+
+/* avg devuelve el valor promedio de una columna*/
+Select * from producto;
+Select avg (Precio) as PromedioDePrecio From producto;
+
+/*funcion sum devuelve la suma total de una columna*/
+select sum (Precio) as SumaAllPrecios From producto;
+select sum (Precio) as SumaAllPrecios From producto and avg(SumaAllPrecio) as promedio from producto;
+
+/*CONSULTA DE DOS TABLAS*/
+/* join permite hacer una consulta para multiples tablas, 
+por lo general se dice que dos tablas, pero pueden ser mas....
+el punto en una consulta sirve apra concatenar, unir--> tablas*/
+
+Select * from Cliente INNER JOIN producto ON
+Cliente.RFC_Cli = producto.RFC_Cli where producto.RFC_Cli = 'OOIH830118LS1';
+
+Select * from Proveedor INNER JOIN producto ON
+Proveedor.RFC_prov = producto.RFC_prov Where Nombre_Pro like '%CH%';
+
+Select Cliente.RFC_Cli, Proveedor.RFC_prov, codigo from producto JOIN Cliente ON
+producto.RFC_Cli = Cliente.RFC_Cli JOIN Proveedor ON
+producto.RFC_prov = Proveedor.RFC_prov;
+
+Update Cliente set Apellidos = 'LOPEZ PORTILLO' where RFC_Cli = '02QW830118LS1';
+Select * from Cliente;
+
+Update producto set Nombre_Prod = 'Mackbook Air 8GB 1tb' where codigo = 3; 
+Select * from producto;
+
+Update producto set [Nombre_Prod] = 'Mackbook Air 8GB 1tb',
+[precio] = 20000 where codigo = 3; 
+
+Delete from producto where RFC_Cli = '02QW830118LS1';
+Delete from Cliente where RFC_Cli = '02QW830118LS1';
+Select * from Cliente;
+
+/* BEGIN TRAN ,,,, ROLLBACK*/
+
+BEGIN TRAN
+Delete from producto where RFC_Cli = 'OOIH830118LS1'
+Select * from producto;
+ROLLBACK
+
+/*truncate --> eliminar todas los registros tabla, eliminar toda la tabla y vuelve a crearla*/
+BEGIN TRAN
+TRUNCATE TABLE producto;
+Select * from producto;
+ROLLBACK
+/*Drop table --> eliminar la tabla definitivamente de la base 
+ de datos y no hay forma de recuperacion estandar*/
+ BEGIN TRAN
+ Drop table producto;
+ Select * from producto;
+ ROLLBACK
+
+ Create procedure insertarClientes
+
+ @RFC varchar (13),
+ @nombre varchar (30),
+ @apellido varchar(30),
+ @direccion varchar(50),
+ @fNac varchar (10)
+ as
+ begin
+ Insert into cliente (RFC_Cli, Nombre_Cli, Apellidos, Direccion_Cli, Fecha_Cli)
+				values(@RFC,@nombre,@apellido,@direccion,@fNac);
+end
+execute insertarClientes 'kdkdjdkskj1232','Nombre','apellido','direccion','2000-09-23';
+select * from cliente
+
+ 
