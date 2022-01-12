@@ -179,4 +179,14 @@ end
 execute insertarClientes 'kdkdjdkskj1232','Nombre','apellido','direccion','2000-09-23';
 select * from cliente
 
- 
+ create procedure PA_Calculo
+ @codigo int,
+ @precionuevo INT
+ as
+ begin
+ update producto set precio = (precio + @precionuevo) where codigo = @codigo;
+ end
+ drop procedure PA_Calculo
+ Select * from producto;
+
+ execute PA_Calculo 3, 5000;
